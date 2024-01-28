@@ -1,39 +1,36 @@
-# Scrivere una funzione righeColonne che prende in input una lista 
-# di stringhe [r1,...,rn] tutte della stessa lunghezza m, e ritorna 
-# la lista di stringhe [c1,...,cm] dove  ci=r1[i]r2[i]....rn[i]
-# TLDR: Girare una lista di stringhe in modo che le righe diventino colonne
-# SUGGERIMENTO: Come potete ottenere dalla lista inziale una sequenza
-# che raggruppi i caratteri che stanno in una specifica colonna??
+# Assumendo di avere una lista di triple (stringa, booleano, lista persone) in cui
+# una tripla rappresenti una persona (nome, sesso, lista dei figli) con Donna associata 
+# True e Uomo a False.
+# Scrivere due funzioni che ritornano rispettivamente
+# 1) la lista delle persone il cui nome inizia con un certo carattere (parametro)
+# 2) la lista delle coppie (nome madre, nome figlia/o)  
 
-def swapRowCols(ls):
-    zippedList = zip(*ls)
-    # Si esegue l'unpacking di ls consentendo l'accesso a ogni elemento
-    # al di fuori del contesto della lista.
-    
-    # Dopo aver praticamente fatto un casting, lo zip puo' prendere
-    # le singole stringhe estratte dalla lista come argomenti, in
-    # modo da raggrupparli carattere per carattere in base a ogni
-    # stringa.
-    
-    cols = [''.join(col) for col in zippedList]
-    # Si prende ogni colonna dello zip e tramite il join si
-    # converte in stringa
-    
-    return cols
+paola = ("Paola", True,[])
+andrea = ("Andrea", True,[paola])
+peter = ("Peter", False,[])
+giulia = ("Giulia", True, [paola, peter])
+persone = [paola, peter, giulia, andrea]
 
-ls = [
-    'olandesirap',
-    'iiseraoimaa',
-    'angelicosio',
-    'tnvghrrcrtc',
-    'oaacaeaeoai',
-    'nrroilgonef',
-    'ieirolagcei',
-    'siosaiavaec',
-    'svsirmaglia',
-    'aatcramolap',
-    'cboaicsaics'
-]
+def srcPerson(c):
+    result = []
+    
+    for p in persone:
+        if p[0].lower().startswith(c.lower()):
+            result.append(p)
+    
+    return result
 
-print(swapRowCols(ls))
+def showFamilies():
+    result = []
+    
+    for p in persone:
+        if p[1] and len(p[2]) > 0:
+            for f in p[2]:
+                result.append((p[0], f[0]))
+    
+    return result
+
+print(srcPerson("p"))
+print(showFamilies())
+
 
