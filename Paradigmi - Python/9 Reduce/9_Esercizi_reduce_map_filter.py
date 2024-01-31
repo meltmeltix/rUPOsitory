@@ -1,14 +1,15 @@
+from functools import reduce
 
 #%%
 # 1. Scrivere la funzione fattoriale(n) usando la funzione reduce (senza iterazione
 #    o ricorsione). 
-  
+
 
 #%%
 # 2. Scrivi una list comprehension equivalente a:
 
 list(map(lambda x: x**3,(filter(lambda x: x % 5 != 0, range(3,20,3)))))
-   
+
 #%%
 # 4. Scrivi la seguente list comprehension utilizzando map e filter:
 
