@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="graph">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/graph.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/graph.jar!/" />
+    </SOURCES>
+  </library>
+</component>
