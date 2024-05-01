@@ -5,22 +5,27 @@ import upo.graph.base.Graph;
 import upo.graph.base.Vertex;
 import upo.graph.base.VisitForest;
 
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
+
+import static util.SetUtils.getVerticesFromArray;
 
 /**
  * @author Alessio Cameroni - 20044488
  */
 public class IndicListUndir implements Graph {
+    private final List<Vertex> vertexList;
+
+    public IndicListUndir() { this.vertexList = new ArrayList<>(); }
+
     @Override
     public int addVertex(Vertex vertex) {
-        return 0;
+        if (vertexList.contains(vertex)) throw new IllegalArgumentException("Vertice gia' presente nella lista");
+        vertexList.add(vertex);
+        return vertexList.size() - 1;
     }
     
     @Override
-    public Set<Vertex> getVertices() {
-        return Set.of();
-    }
+    public Set<Vertex> getVertices() { return getVerticesFromArray(vertexList); }
     
     @Override
     public Set<Edge> getEdges() {

@@ -12,6 +12,10 @@ import java.util.Set;
  * @author Alessio Cameroni - 20044488
  */
 public class IndicListUndirWeight implements WeightedGraph {
+
+
+    public IndicListUndirWeight() {}
+
     @Override
     public double getEdgeWeight(Edge edge) throws IllegalArgumentException, NoSuchElementException {
         return 0;
