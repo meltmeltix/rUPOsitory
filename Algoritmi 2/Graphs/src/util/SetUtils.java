@@ -13,17 +13,18 @@ import java.util.Set;
  * @author Cameroni Alessio
  */
 public class SetUtils {
-
+    
     /**
-     * Creates a new Set of vertex and adds every element of the
-     * array to said set.
+     * Given a List of type T, adds all elements to
+     * a Set of type T
      *
-     * @param array         Array of Vertices
-     * @return vertexSet    Set of Vertices
+     * @param array         Array containing T elements
+     * @return objectSet    Set containing T elements of array
+     * @param <T>           Generic type T
      */
-    public static Set<Vertex> getVerticesFromArray(List<Vertex> array) {
-        Set<Vertex> vertexSet = new HashSet<>();
-        vertexSet.addAll(array);
-        return vertexSet;
+    public static <T> Set<T> getSetFromArray(List<T> array) {
+        Set<T> objectSet = new HashSet<>();
+        objectSet.addAll(array);
+        return objectSet;
     }
 }
