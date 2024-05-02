@@ -72,27 +72,25 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     @Override
     public int size() { return getVertexList().size(); }
     
-    // TODO
     @Override
-    public boolean isDirected() {
-        return false;
-    }
-    
+    public boolean isDirected() { return false; }
+
     // TODO
     @Override
     public boolean isCyclic() {
         return false;
     }
-    
-    // TODO
+
     @Override
-    public boolean isDAG() {
-        return false;
-    }
+    public boolean isDAG() { return false; }
     
     // TODO
     @Override
     public VisitForest getBFSTree(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
+        if (!getVertexList().contains(startingVertex)) throw new IllegalArgumentException();
+
+        //VisitForest bfs = new VisitForest(this, VisitForest.VisitType.BFS);
+
         return null;
     }
     
