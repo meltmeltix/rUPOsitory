@@ -11,9 +11,8 @@ import java.util.Set;
 /**
  * @author Alessio Cameroni - 20044488
  */
-public class IndicListUndirWeight implements WeightedGraph {
-
-
+public class IndicListUndirWeight extends GraphVertexMapping implements WeightedGraph {
+    
     public IndicListUndirWeight() {}
 
     @Override

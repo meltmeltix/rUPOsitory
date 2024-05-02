@@ -12,20 +12,15 @@ import static util.SetUtils.getVerticesFromArray;
 /**
  * @author Alessio Cameroni - 20044488
  */
-public class IndicListUndir implements Graph {
-    private final List<Vertex> vertexList;
+public class IndicListUndir extends GraphVertexMapping implements Graph {
 
-    public IndicListUndir() { this.vertexList = new ArrayList<>(); }
+    public IndicListUndir() {  }
 
     @Override
-    public int addVertex(Vertex vertex) {
-        if (vertexList.contains(vertex)) throw new IllegalArgumentException("Vertice gia' presente nella lista");
-        vertexList.add(vertex);
-        return vertexList.size() - 1;
-    }
+    public int addVertex(Vertex vertex) { return addVertexIndex(vertex); }
     
     @Override
-    public Set<Vertex> getVertices() { return getVerticesFromArray(vertexList); }
+    public Set<Vertex> getVertices() { return getVerticesFromArray(getVertexList()); }
     
     @Override
     public Set<Edge> getEdges() {
