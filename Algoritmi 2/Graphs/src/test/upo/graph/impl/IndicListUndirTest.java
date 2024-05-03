@@ -1,12 +1,18 @@
 package upo.graph.impl;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class IndicListUndirTest {
 
+    @BeforeEach
+    
+    
     @org.junit.jupiter.api.Test
     void addVertex() {
-
+    
     }
 
     @org.junit.jupiter.api.Test
@@ -87,5 +93,89 @@ class IndicListUndirTest {
 
     @org.junit.jupiter.api.Test
     void connectedComponents() {
+    }
+    
+    @Test
+    void testAddVertex() {
+    }
+    
+    @Test
+    void testGetVertices() {
+    }
+    
+    @Test
+    void testGetEdges() {
+    }
+    
+    @Test
+    void testContainsVertex() {
+    }
+    
+    @Test
+    void testRemoveVertex() {
+    }
+    
+    @Test
+    void testAddEdge() {
+    }
+    
+    @Test
+    void testContainsEdge() {
+    }
+    
+    @Test
+    void testRemoveEdge() {
+    }
+    
+    @Test
+    void testGetAdjacent() {
+    }
+    
+    @Test
+    void testIsAdjacent() {
+    }
+    
+    @Test
+    void testSize() {
+    }
+    
+    @Test
+    void testIsDirected() {
+    }
+    
+    @Test
+    void testIsCyclic() {
+    }
+    
+    @Test
+    void testIsDAG() {
+    }
+    
+    @Test
+    void testGetBFSTree() {
+    }
+    
+    @Test
+    void testGetDFSTree() {
+    }
+    
+    @Test
+    void testGetDFSTOTForest1() {
+    }
+    
+    @Test
+    void testGetDFSTOTForest2() {
+    }
+    
+    @Test
+    void testTopologicalSort() {
+    }
+    
+    @Test
+    void testStronglyConnectedComponents() {
+    }
+    
+    @Test
+    void testConnectedComponents() {
     }
 }

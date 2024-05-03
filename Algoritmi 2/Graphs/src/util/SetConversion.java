@@ -1,7 +1,5 @@
 package util;
 
-import upo.graph.base.Vertex;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +10,7 @@ import java.util.Set;
  *
  * @author Cameroni Alessio
  */
-public class SetUtils {
+public class SetConversion {
     
     /**
      * Given a List of type T, adds all elements to

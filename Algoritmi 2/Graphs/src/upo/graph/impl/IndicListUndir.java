@@ -7,7 +7,9 @@ import upo.graph.base.VisitForest;
 
 import java.util.*;
 
-import static util.SetUtils.getSetFromArray;
+import static upo.graph.base.VisitForest.VisitType.BFS;
+import static upo.graph.base.VisitForest.VisitType.DFS;
+import static util.SetConversion.getSetFromArray;
 
 /**
  * @author Alessio Cameroni - 20044488
@@ -84,25 +86,73 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     @Override
     public boolean isDAG() { return false; }
     
-    // TODO
     @Override
     public VisitForest getBFSTree(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
         if (!getVertexList().contains(startingVertex)) throw new IllegalArgumentException();
-
-        //VisitForest bfs = new VisitForest(this, VisitForest.VisitType.BFS);
-
-        return null;
+        
+        Queue<Vertex> D = new LinkedList<>();
+        VisitForest bfs = new VisitForest(this, BFS);
+        
+        bfs.setDistance(startingVertex, 0);
+        bfs.setColor(startingVertex, VisitForest.Color.GRAY);
+        D.add(startingVertex);
+        
+        while (!D.isEmpty()) {
+            Vertex u = D.element();
+            
+            for (Vertex v:getAdjacent(u)) {
+                if (bfs.getColor(v) == VisitForest.Color.WHITE) {
+                    bfs.setColor(v, VisitForest.Color.GRAY);
+                    bfs.setParent(v, u);
+                    bfs.setDistance(v, bfs.getDistance(u) + 1);
+                }
+            }
+            
+            bfs.setColor(u, VisitForest.Color.BLACK);
+            D.remove();
+        }
+        
+        return bfs;
     }
     
-    // TODO
     @Override
     public VisitForest getDFSTree(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
-        return null;
+        if (!getVertexList().contains(startingVertex)) throw new IllegalArgumentException();
+        
+        Stack<Vertex> D = new Stack<>();
+        VisitForest dfs = new VisitForest(this, DFS);
+        
+        dfs.setColor(startingVertex, VisitForest.Color.GRAY);
+        D.push(startingVertex);
+        
+        while (!D.isEmpty()) {
+            Vertex u = D.peek();
+            boolean foundWhite = false;
+            
+            for (Vertex v:getAdjacent(u)) {
+                if (dfs.getColor(v) == VisitForest.Color.WHITE) {
+                    dfs.setColor(v, VisitForest.Color.GRAY);
+                    dfs.setParent(v, u);
+                    D.push(v);
+                    foundWhite = true;
+                    break;
+                }
+            }
+            
+            if (foundWhite) {
+                dfs.setColor(u, VisitForest.Color.BLACK);
+                D.pop();
+            }
+        }
+        
+        return dfs;
     }
     
     // TODO
     @Override
     public VisitForest getDFSTOTForest(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
+        
+        
         return null;
     }
     
