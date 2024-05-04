@@ -7,8 +7,8 @@ import upo.graph.base.VisitForest;
 
 import java.util.*;
 
-import static upo.graph.base.VisitForest.VisitType.BFS;
-import static upo.graph.base.VisitForest.VisitType.DFS;
+import static upo.graph.base.VisitForest.VisitType.*;
+import static upo.graph.base.VisitForest.Color.*;
 import static util.SetConversion.getSetFromArray;
 
 /**
@@ -16,8 +16,12 @@ import static util.SetConversion.getSetFromArray;
  */
 public class IndicListUndir extends GraphVertexMapping implements Graph {
     private final List<Edge> edgeList;
+    private int time;
     
-    public IndicListUndir() { edgeList = new ArrayList<>(); }
+    public IndicListUndir() {
+        edgeList = new ArrayList<>();
+        time = 0;
+    }
 
     @Override
     public int addVertex(Vertex vertex) { return addVertexIndex(vertex); }
@@ -77,9 +81,35 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     @Override
     public boolean isDirected() { return false; }
 
-    // TODO
     @Override
     public boolean isCyclic() {
+        VisitForest cyc = new VisitForest(this, OTHER);
+
+        for (Vertex u:getVertexList())
+            if (cyc.getColor(u) == WHITE && visitTreeCycle(cyc, u))
+                return true;
+        return false;
+    }
+
+    /**
+     * Recursive method used to visit the tree
+     * and check whether the tree is indeed cyclic
+     *
+     * @param cyc       VisitForest object used to refer to the graph
+     * @param u         The currently investigated node, updates on recursion
+     * @return          Boolean
+     */
+    private boolean visitTreeCycle(VisitForest cyc, Vertex u) {
+        cyc.setColor(u, GRAY);
+
+        for (Vertex v:getAdjacent(u)) {
+            if (cyc.getColor(v) == WHITE) {
+                cyc.setParent(v, u);
+                if (visitTreeCycle(cyc, v)) return true;
+            } else if (!v.equals(cyc.getPartent(u))) return true;
+        }
+
+        cyc.setColor(u, BLACK);
         return false;
     }
 
@@ -94,21 +124,21 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         VisitForest bfs = new VisitForest(this, BFS);
         
         bfs.setDistance(startingVertex, 0);
-        bfs.setColor(startingVertex, VisitForest.Color.GRAY);
+        bfs.setColor(startingVertex, GRAY);
         D.add(startingVertex);
         
         while (!D.isEmpty()) {
             Vertex u = D.element();
             
             for (Vertex v:getAdjacent(u)) {
-                if (bfs.getColor(v) == VisitForest.Color.WHITE) {
-                    bfs.setColor(v, VisitForest.Color.GRAY);
+                if (bfs.getColor(v) == WHITE) {
+                    bfs.setColor(v, GRAY);
                     bfs.setParent(v, u);
                     bfs.setDistance(v, bfs.getDistance(u) + 1);
                 }
             }
             
-            bfs.setColor(u, VisitForest.Color.BLACK);
+            bfs.setColor(u, BLACK);
             D.remove();
         }
         
@@ -122,7 +152,7 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         Stack<Vertex> D = new Stack<>();
         VisitForest dfs = new VisitForest(this, DFS);
         
-        dfs.setColor(startingVertex, VisitForest.Color.GRAY);
+        dfs.setColor(startingVertex, GRAY);
         D.push(startingVertex);
         
         while (!D.isEmpty()) {
@@ -130,8 +160,8 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
             boolean foundWhite = false;
             
             for (Vertex v:getAdjacent(u)) {
-                if (dfs.getColor(v) == VisitForest.Color.WHITE) {
-                    dfs.setColor(v, VisitForest.Color.GRAY);
+                if (dfs.getColor(v) == WHITE) {
+                    dfs.setColor(v, GRAY);
                     dfs.setParent(v, u);
                     D.push(v);
                     foundWhite = true;
@@ -140,43 +170,66 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
             }
             
             if (foundWhite) {
-                dfs.setColor(u, VisitForest.Color.BLACK);
+                dfs.setColor(u, BLACK);
                 D.pop();
             }
         }
         
         return dfs;
     }
-    
-    // TODO
+
     @Override
     public VisitForest getDFSTOTForest(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
-        
-        
-        return null;
+        if (!getVertexList().contains(startingVertex)) throw new IllegalArgumentException();
+        VisitForest dfs = new VisitForest(this, DFS_TOT);
+        return visitDFSTOTForest(dfs, startingVertex);
     }
-    
-    // TODO
+
     @Override
     public VisitForest getDFSTOTForest(Vertex[] vertexOrdering) throws UnsupportedOperationException, IllegalArgumentException {
-        return null;
+        if (vertexOrdering == null || vertexOrdering.length != getVertexList().size()) throw new IllegalArgumentException();
+
+        VisitForest dfs = new VisitForest(this, DFS_TOT);
+        for (Vertex v:vertexOrdering) {
+            if (!getVertexList().contains(v)) throw new IllegalArgumentException();
+            dfs = visitDFSTOTForest(dfs, v);
+        }
+
+        return dfs;
     }
-    
-    // TODO
+
+    private VisitForest visitDFSTOTForest(VisitForest dfs, Vertex u) {
+        dfs.setColor(u, GRAY);
+        dfs.setStartTime(u, time);
+        time += 1;
+
+        for (Vertex v:getAdjacent(u)) {
+            if (dfs.getColor(v) == WHITE) {
+                dfs.setParent(v, u);
+                dfs = visitDFSTOTForest(dfs, v);
+            }
+        }
+
+        dfs.setColor(u, BLACK);
+        dfs.setEndTime(u, time);
+        time += 1;
+
+        return dfs;
+    }
+
     @Override
     public Vertex[] topologicalSort() throws UnsupportedOperationException {
-        return new Vertex[0];
+        throw new UnsupportedOperationException();
     }
-    
-    // TODO
+
     @Override
     public Set<Set<Vertex>> stronglyConnectedComponents() throws UnsupportedOperationException {
-        return Set.of();
+        throw new UnsupportedOperationException();
     }
-    
+
     // TODO
     @Override
     public Set<Set<Vertex>> connectedComponents() throws UnsupportedOperationException {
-        return Set.of();
+        return null;
     }
 }

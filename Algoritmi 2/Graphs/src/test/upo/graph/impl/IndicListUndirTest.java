@@ -6,176 +6,91 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IndicListUndirTest {
+    IndicListUndir list;
 
     @BeforeEach
-    
-    
-    @org.junit.jupiter.api.Test
-    void addVertex() {
-    
+    void init() {
+        list = new IndicListUndir();
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
+    void addVertex() {
+    }
+
+    @Test
     void getVertices() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getEdges() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void containsVertex() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void removeVertex() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void addEdge() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void containsEdge() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void removeEdge() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getAdjacent() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void isAdjacent() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void size() {
     }
 
-    @org.junit.jupiter.api.Test
-    void isDirected() {
-    }
+    @Test
+    void isDirected() { assertFalse(list.isDirected()); }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void isCyclic() {
     }
 
-    @org.junit.jupiter.api.Test
-    void isDAG() {
-    }
+    @Test
+    void isDAG() { assertFalse(list.isDAG()); }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getBFSTree() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getDFSTree() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getDFSTOTForest() {
     }
 
-    @org.junit.jupiter.api.Test
-    void testGetDFSTOTForest() {
+    @Test
+    void getDFSTOTForestOrdered() {
     }
 
-    @org.junit.jupiter.api.Test
-    void topologicalSort() {
-    }
+    @Test
+    void topologicalSort() { assertThrows(UnsupportedOperationException.class, () -> list.topologicalSort()); }
 
-    @org.junit.jupiter.api.Test
-    void stronglyConnectedComponents() {
-    }
+    @Test
+    void stronglyConnectedComponents() { assertThrows(UnsupportedOperationException.class, () -> list.topologicalSort()); }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void connectedComponents() {
-    }
-    
-    @Test
-    void testAddVertex() {
-    }
-    
-    @Test
-    void testGetVertices() {
-    }
-    
-    @Test
-    void testGetEdges() {
-    }
-    
-    @Test
-    void testContainsVertex() {
-    }
-    
-    @Test
-    void testRemoveVertex() {
-    }
-    
-    @Test
-    void testAddEdge() {
-    }
-    
-    @Test
-    void testContainsEdge() {
-    }
-    
-    @Test
-    void testRemoveEdge() {
-    }
-    
-    @Test
-    void testGetAdjacent() {
-    }
-    
-    @Test
-    void testIsAdjacent() {
-    }
-    
-    @Test
-    void testSize() {
-    }
-    
-    @Test
-    void testIsDirected() {
-    }
-    
-    @Test
-    void testIsCyclic() {
-    }
-    
-    @Test
-    void testIsDAG() {
-    }
-    
-    @Test
-    void testGetBFSTree() {
-    }
-    
-    @Test
-    void testGetDFSTree() {
-    }
-    
-    @Test
-    void testGetDFSTOTForest1() {
-    }
-    
-    @Test
-    void testGetDFSTOTForest2() {
-    }
-    
-    @Test
-    void testTopologicalSort() {
-    }
-    
-    @Test
-    void testStronglyConnectedComponents() {
-    }
-    
-    @Test
-    void testConnectedComponents() {
+
     }
 }
