@@ -38,12 +38,13 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     @Override
     public void removeVertex(Vertex vertex) throws NoSuchElementException {
         if (!getVertexList().contains(vertex)) throw new NoSuchElementException();
-        addVertex(vertex);
+        getVertexList().remove(vertex);
     }
     
     @Override
     public void addEdge(Edge edge) throws IllegalArgumentException {
-        if (edgeList.contains(edge)) throw new UnsupportedOperationException();
+        if (!getVertexList().contains(edge.getSource()) || !getVertexList().contains(edge.getTarget()))
+            throw new IllegalArgumentException();
         edgeList.add(edge);
     }
     
@@ -95,7 +96,7 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
      * Recursive method used to visit the tree
      * and check whether the tree is indeed cyclic
      *
-     * @param cyc       VisitForest object used to refer to the graph
+     * @param cyc       VisitForest object holding the Graph information
      * @param u         The currently investigated node, updates on recursion
      * @return          Boolean
      */
@@ -198,6 +199,13 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         return dfs;
     }
 
+    /**
+     * Method containing the main DFS algorithm
+     *
+     * @param dfs       VisitForest object holding the Graph information
+     * @param u         The currently investigated node
+     * @return          dfs after visiting the forest
+     */
     private VisitForest visitDFSTOTForest(VisitForest dfs, Vertex u) {
         dfs.setColor(u, GRAY);
         dfs.setStartTime(u, time);
@@ -230,6 +238,11 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     // TODO
     @Override
     public Set<Set<Vertex>> connectedComponents() throws UnsupportedOperationException {
-        return null;
+        Set<Set<Vertex>> cc = new HashSet<>();
+        VisitForest visit = new VisitForest(this, OTHER);
+
+
+
+        return cc;
     }
 }
