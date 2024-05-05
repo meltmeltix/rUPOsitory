@@ -71,10 +71,14 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         vertexTarget.add(Edge.getEdgeByVertexes(edge.getTarget(), edge.getSource()));
     }
 
-    // TODO
     @Override
     public boolean containsEdge(Edge edge) throws IllegalArgumentException {
-        return false; // edgeList.contains(edge);
+        if (!getVertexList().contains(edge.getSource()) || !getVertexList().contains(edge.getTarget()))
+            throw new IllegalArgumentException();
+
+        return incidList
+                .get(getVertexList().indexOf(edge.getSource()))
+                .contains(edge);
     }
     
     @Override
@@ -217,17 +221,14 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         return visitDFSTOTForest(dfs, startingVertex);
     }
 
+    // TODO
     @Override
     public VisitForest getDFSTOTForest(Vertex[] vertexOrdering) throws UnsupportedOperationException, IllegalArgumentException {
         if (vertexOrdering == null || vertexOrdering.length != getVertexList().size()) throw new IllegalArgumentException();
 
-        VisitForest dfs = new VisitForest(this, DFS_TOT);
-        for (Vertex v:vertexOrdering) {
-            if (!getVertexList().contains(v)) throw new IllegalArgumentException();
-            dfs = visitDFSTOTForest(dfs, v);
-        }
 
-        return dfs;
+
+        return null;
     }
 
     private VisitForest visitDFSTOTForest(VisitForest dfs, Vertex u) {
@@ -262,11 +263,6 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     // TODO
     @Override
     public Set<Set<Vertex>> connectedComponents() throws UnsupportedOperationException {
-        Set<Set<Vertex>> cc = new HashSet<>();
-        VisitForest visit = new VisitForest(this, OTHER);
-
-
-
-        return cc;
+        return null;
     }
 }
