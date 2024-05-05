@@ -45,7 +45,9 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     public void addEdge(Edge edge) throws IllegalArgumentException {
         if (!getVertexList().contains(edge.getSource()) || !getVertexList().contains(edge.getTarget()))
             throw new IllegalArgumentException();
+
         edgeList.add(edge);
+        edgeList.add(Edge.getEdgeByVertexes(edge.getTarget(), edge.getSource()));
     }
     
     @Override
@@ -53,7 +55,9 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     
     @Override
     public void removeEdge(Edge edge) throws IllegalArgumentException, NoSuchElementException {
-        if (!edgeList.contains(edge)) throw new IllegalArgumentException();
+        if (!getVertexList().contains(edge.getSource()) || !getVertexList().contains(edge.getTarget()))
+            throw new IllegalArgumentException();
+        if (!edgeList.contains(edge)) throw new NoSuchElementException();
         edgeList.remove(edge);
     }
     
@@ -63,8 +67,8 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         
         Set<Vertex> adjacentVertices = new HashSet<>();
         for (Edge edge:getEdges()) {
-            if(vertex == edge.getSource()) adjacentVertices.add(edge.getSource());
-            else if (vertex == edge.getTarget()) adjacentVertices.add(edge.getTarget());
+            if (vertex == edge.getSource()) adjacentVertices.add(edge.getTarget());
+            else if (vertex == edge.getTarget()) adjacentVertices.add(edge.getSource());
         }
         return adjacentVertices;
     }
