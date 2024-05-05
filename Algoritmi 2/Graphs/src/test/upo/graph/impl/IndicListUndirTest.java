@@ -4,11 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import upo.graph.base.Edge;
 import upo.graph.base.Vertex;
+import upo.graph.base.VisitForest;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,15 +65,18 @@ class IndicListUndirTest {
 
     @Test
     void getEdges() {
-        Set<Edge> edges = new HashSet<>();
-        edges.add(Edge.getEdgeByVertexes(v1, v2));
-        edges.add(Edge.getEdgeByVertexes(v2, v1));
-        edges.add(Edge.getEdgeByVertexes(v1, v3));
-        edges.add(Edge.getEdgeByVertexes(v3, v1));
-        edges.add(Edge.getEdgeByVertexes(v3, v4));
-        edges.add(Edge.getEdgeByVertexes(v4, v3));
-        edges.add(Edge.getEdgeByVertexes(v2, v5));
-        edges.add(Edge.getEdgeByVertexes(v5, v2));
+        Set<Edge> edges = new HashSet<>(
+            Arrays.asList(
+                Edge.getEdgeByVertexes(v1, v2),
+                Edge.getEdgeByVertexes(v2, v1),
+                Edge.getEdgeByVertexes(v1, v3),
+                Edge.getEdgeByVertexes(v3, v1),
+                Edge.getEdgeByVertexes(v3, v4),
+                Edge.getEdgeByVertexes(v4, v3),
+                Edge.getEdgeByVertexes(v2, v5),
+                Edge.getEdgeByVertexes(v5, v2)
+            )
+        );
 
         assertEquals(edges, fun.getEdges());
     }
@@ -93,14 +94,18 @@ class IndicListUndirTest {
 
     @Test
     void removeVertex() {
+        System.out.println(fun.getVertices());
+        System.out.println(fun.getEdges());
+
         // Successfully remove vertex
         assertDoesNotThrow(() -> fun.removeVertex(Vertex.getVertexByLabel("2")));
-        assertDoesNotThrow(() -> fun.removeVertex(Vertex.getVertexByLabel("3")));
+        assertDoesNotThrow(() -> fun.removeVertex(Vertex.getVertexByLabel("4")));
         System.out.println(fun.getVertices());
+        System.out.println(fun.getEdges());
 
         // Requested vertex does not exist
         assertThrows(NoSuchElementException.class, () -> fun.removeVertex(Vertex.getVertexByLabel("2")));
-        assertThrows(NoSuchElementException.class, () -> fun.removeVertex(Vertex.getVertexByLabel("3")));
+        assertThrows(NoSuchElementException.class, () -> fun.removeVertex(Vertex.getVertexByLabel("4")));
     }
 
     @Test
@@ -210,7 +215,16 @@ class IndicListUndirTest {
 
     @Test
     void getBFSTree() {
+        // Successfully visit tree
+        List<Vertex> parents = Arrays.asList(null, v1, v1, v3, v2);
+        VisitForest visit = fun.getBFSTree(v1);
 
+        for (int i = 0; i < fun.getVertexList().size(); i++) {
+            assertEquals(
+                parents.get(i),
+                visit.getPartent(fun.getVertexList().get(i))
+            );
+        }
 
         // startingVertex is not in the list
         assertThrows(IllegalArgumentException.class, () -> fun.getBFSTree(Vertex.getVertexByLabel("98")));
@@ -219,6 +233,17 @@ class IndicListUndirTest {
 
     @Test
     void getDFSTree() {
+        // Successfully visit tree
+        List<Vertex> parents = Arrays.asList(null, v1, v1, v3, v2);
+        VisitForest visit = fun.getDFSTree(v1);
+
+        for (int i = 0; i < fun.getVertexList().size(); i++) {
+            assertEquals(
+                parents.get(i),
+                visit.getPartent(fun.getVertexList().get(i))
+            );
+        }
+
         // startingVertex is not in the list
         assertThrows(IllegalArgumentException.class, () -> fun.getDFSTree(Vertex.getVertexByLabel("98")));
         assertThrows(IllegalArgumentException.class, () -> fun.getDFSTree(Vertex.getVertexByLabel("99")));

@@ -12,25 +12,40 @@ import static upo.graph.base.VisitForest.Color.*;
 import static util.SetConversion.getSetFromArray;
 
 /**
+ * Classe contenente l'implementazione dell'interfaccia Graph dedicata alle liste di incidenza.
+ * La lista di incidenza e' rappresentata da una Lista di Set di Edge, strutturata nel
+ * seguente modo:
+ * <ul>
+ *     <li>Gli indici dei Vertex all'interno della lista edgeList rispecchiano gli indici usati in incidList</li>
+ *     <li>Ogni Set di Edge rappresenta gli Edge di incidenza sul proprio Vertex</li>
+ * </ul>
+ *
  * @author Alessio Cameroni - 20044488
  */
 public class IndicListUndir extends GraphVertexMapping implements Graph {
-    private final List<Edge> edgeList;
+    private final List<Set<Edge>> incidList;
     private int time;
     
     public IndicListUndir() {
-        edgeList = new ArrayList<>();
+        incidList = new ArrayList<>();
         time = 0;
     }
 
     @Override
-    public int addVertex(Vertex vertex) { return addVertexIndex(vertex); }
+    public int addVertex(Vertex vertex) {
+        incidList.add(new HashSet<>());
+        return addVertexIndex(vertex);
+    }
     
     @Override
     public Set<Vertex> getVertices() { return getSetFromArray(getVertexList()); }
     
     @Override
-    public Set<Edge> getEdges() { return getSetFromArray(edgeList); }
+    public Set<Edge> getEdges() {
+        Set<Edge> edges = new HashSet<>();
+        for(Set<Edge> vertex:incidList) { edges.addAll(vertex); }
+        return edges;
+    }
     
     @Override
     public boolean containsVertex(Vertex vertex) { return getVertexList().contains(vertex); }
@@ -38,6 +53,9 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     @Override
     public void removeVertex(Vertex vertex) throws NoSuchElementException {
         if (!getVertexList().contains(vertex)) throw new NoSuchElementException();
+
+        incidList.remove(getVertexList().indexOf(vertex));
+        for (Set<Edge> vertexEdges:incidList) vertexEdges.removeIf(edge -> edge.getTarget() == vertex);
         getVertexList().remove(vertex);
     }
     
@@ -46,19 +64,34 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         if (!getVertexList().contains(edge.getSource()) || !getVertexList().contains(edge.getTarget()))
             throw new IllegalArgumentException();
 
-        edgeList.add(edge);
-        edgeList.add(Edge.getEdgeByVertexes(edge.getTarget(), edge.getSource()));
+        Set<Edge> vertexSource = incidList.get(getVertexList().indexOf(edge.getSource()));
+        vertexSource.add(edge);
+
+        Set<Edge> vertexTarget = incidList.get(getVertexList().indexOf(edge.getTarget()));
+        vertexTarget.add(Edge.getEdgeByVertexes(edge.getTarget(), edge.getSource()));
     }
-    
+
+    // TODO
     @Override
-    public boolean containsEdge(Edge edge) throws IllegalArgumentException { return edgeList.contains(edge); }
+    public boolean containsEdge(Edge edge) throws IllegalArgumentException {
+        return false; // edgeList.contains(edge);
+    }
     
     @Override
     public void removeEdge(Edge edge) throws IllegalArgumentException, NoSuchElementException {
         if (!getVertexList().contains(edge.getSource()) || !getVertexList().contains(edge.getTarget()))
             throw new IllegalArgumentException();
-        if (!edgeList.contains(edge)) throw new NoSuchElementException();
-        edgeList.remove(edge);
+
+        boolean vertexFound = false;
+
+        for (Set<Edge> vertexEdges:incidList) {
+            if (vertexEdges.contains(edge)) {
+                vertexEdges.remove(edge);
+                vertexFound = true;
+            } else vertexEdges.remove(Edge.getEdgeByVertexes(edge.getTarget(), edge.getSource()));
+        }
+
+        if (!vertexFound) throw new NoSuchElementException();
     }
     
     @Override
@@ -66,10 +99,7 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         if (!getVertexList().contains(vertex)) throw new NoSuchElementException();
         
         Set<Vertex> adjacentVertices = new HashSet<>();
-        for (Edge edge:getEdges()) {
-            if (vertex == edge.getSource()) adjacentVertices.add(edge.getTarget());
-            else if (vertex == edge.getTarget()) adjacentVertices.add(edge.getSource());
-        }
+        for (Edge edge:incidList.get(getVertexList().indexOf(vertex))) adjacentVertices.add(edge.getTarget());
         return adjacentVertices;
     }
     
@@ -77,7 +107,10 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
     public boolean isAdjacent(Vertex targetVertex, Vertex sourceVertex) throws IllegalArgumentException {
         if (!getVertexList().contains(sourceVertex) || !getVertexList().contains(targetVertex))
             throw new IllegalArgumentException();
-        return edgeList.contains(Edge.getEdgeByVertexes(sourceVertex, targetVertex));
+
+        return incidList
+                .get(getVertexList().indexOf(sourceVertex))
+                .contains(Edge.getEdgeByVertexes(sourceVertex, targetVertex));
     }
     
     @Override
@@ -96,14 +129,7 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         return false;
     }
 
-    /**
-     * Recursive method used to visit the tree
-     * and check whether the tree is indeed cyclic
-     *
-     * @param cyc       VisitForest object holding the Graph information
-     * @param u         The currently investigated node, updates on recursion
-     * @return          Boolean
-     */
+
     private boolean visitTreeCycle(VisitForest cyc, Vertex u) {
         cyc.setColor(u, GRAY);
 
@@ -140,6 +166,7 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
                     bfs.setColor(v, GRAY);
                     bfs.setParent(v, u);
                     bfs.setDistance(v, bfs.getDistance(u) + 1);
+                    D.add(v);
                 }
             }
             
@@ -162,19 +189,19 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         
         while (!D.isEmpty()) {
             Vertex u = D.peek();
-            boolean foundWhite = false;
-            
+            boolean hasWhiteAdjacent = false;
+
             for (Vertex v:getAdjacent(u)) {
                 if (dfs.getColor(v) == WHITE) {
                     dfs.setColor(v, GRAY);
                     dfs.setParent(v, u);
                     D.push(v);
-                    foundWhite = true;
+                    hasWhiteAdjacent = true;
                     break;
                 }
             }
-            
-            if (foundWhite) {
+
+            if (!hasWhiteAdjacent) {
                 dfs.setColor(u, BLACK);
                 D.pop();
             }
@@ -203,13 +230,6 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         return dfs;
     }
 
-    /**
-     * Method containing the main DFS algorithm
-     *
-     * @param dfs       VisitForest object holding the Graph information
-     * @param u         The currently investigated node
-     * @return          dfs after visiting the forest
-     */
     private VisitForest visitDFSTOTForest(VisitForest dfs, Vertex u) {
         dfs.setColor(u, GRAY);
         dfs.setStartTime(u, time);
