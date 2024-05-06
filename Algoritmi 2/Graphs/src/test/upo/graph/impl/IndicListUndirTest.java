@@ -44,7 +44,7 @@ class IndicListUndirTest {
         // New vertices
         assertEquals(5, fun.addVertex(Vertex.getVertexByLabel("6")));
         assertEquals(6, fun.addVertex(Vertex.getVertexByLabel("7")));
-        System.out.println(fun.getVertices());
+        System.out.println(fun.getVertexList());
 
         // Already existing vertices
         assertThrows(UnsupportedOperationException.class, () -> fun.addVertex(v1));
@@ -94,13 +94,13 @@ class IndicListUndirTest {
 
     @Test
     void removeVertex() {
-        System.out.println(fun.getVertices());
+        System.out.println(fun.getVertexList());
         System.out.println(fun.getEdges());
 
         // Successfully remove vertex
         assertDoesNotThrow(() -> fun.removeVertex(Vertex.getVertexByLabel("2")));
         assertDoesNotThrow(() -> fun.removeVertex(Vertex.getVertexByLabel("4")));
-        System.out.println(fun.getVertices());
+        System.out.println(fun.getVertexList());
         System.out.println(fun.getEdges());
 
         // Requested vertex does not exist
@@ -277,7 +277,7 @@ class IndicListUndirTest {
         order[3] = v3;
         order[4] = v5;
 
-        List<Integer> times = Arrays.asList(9, 4, 8, 7, 3);
+        List<Integer> times = Arrays.asList(6, 9, 5, 4, 8);
         VisitForest visit = fun.getDFSTOTForest(order);
 
         for (int i = 0; i < fun.getVertexList().size(); i++) {
@@ -300,6 +300,13 @@ class IndicListUndirTest {
 
     @Test
     void connectedComponents() {
+        Vertex v6 = Vertex.getVertexByLabel("6");
+        fun.addVertex(v6);
 
+        Set<Set<Vertex>> cc = new HashSet<>();
+        cc.add(new HashSet<>(Arrays.asList(v1, v2, v3, v4, v5)));
+        cc.add(new HashSet<>(Collections.singletonList(v6)));
+
+        assertEquals(cc, fun.connectedComponents());
     }
 }

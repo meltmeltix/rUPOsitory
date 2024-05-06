@@ -133,7 +133,14 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         return false;
     }
 
-
+    /**
+     * Metodo ricorsivo che si occupa di controllare
+     * che il grafo sia ciclico.
+     *
+     * @param cyc       L'albero di visita che rappresenta la (A)ciclita
+     * @param u         Nodo iniziale di ogni ricorsione
+     * @return          Booleano in base alla condizione
+     */
     private boolean visitTreeCycle(VisitForest cyc, Vertex u) {
         cyc.setColor(u, GRAY);
 
@@ -221,16 +228,30 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         return visitDFSTOTForest(dfs, startingVertex);
     }
 
-    // TODO
     @Override
     public VisitForest getDFSTOTForest(Vertex[] vertexOrdering) throws UnsupportedOperationException, IllegalArgumentException {
-        if (vertexOrdering == null || vertexOrdering.length != getVertexList().size()) throw new IllegalArgumentException();
+        if (vertexOrdering == null) throw new IllegalArgumentException();
+        for (Vertex v:vertexOrdering)
+            if (!getVertexList().contains(v)) throw new IllegalArgumentException();
 
+        VisitForest dfs = new VisitForest(this, DFS_TOT);
 
+        for (Vertex u:vertexOrdering) {
+            if (!getVertexList().contains(u)) throw new IllegalArgumentException();
+            if (dfs.getColor(u) == WHITE) dfs = visitDFSTOTForest(dfs, u);
+        }
 
-        return null;
+        return dfs;
     }
 
+    /**
+     * Metodo che implementa la visita DFS totale
+     * in modo ricorsivo.
+     *
+     * @param dfs       L'albero di visita
+     * @param u         Nodo iniziale di ogni ricorsione
+     * @return          Lo stato dell'albero della ricorsione
+     */
     private VisitForest visitDFSTOTForest(VisitForest dfs, Vertex u) {
         dfs.setColor(u, GRAY);
         dfs.setStartTime(u, time);
@@ -260,9 +281,23 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         throw new UnsupportedOperationException();
     }
 
-    // TODO
     @Override
     public Set<Set<Vertex>> connectedComponents() throws UnsupportedOperationException {
-        return null;
+        Set<Set<Vertex>> cc = new HashSet<>();
+        VisitForest bfs = new VisitForest(this, BFS);
+
+        for (Vertex u:getVertexList()) {
+            if (bfs.getColor(u) == WHITE) {
+                bfs = getBFSTree(u);
+                Set<Vertex> component = new HashSet<>();
+
+                for (Vertex v:getVertexList())
+                    if (bfs.getColor(v) == BLACK) component.add(v);
+
+                cc.add(component);
+            }
+        }
+
+        return cc;
     }
 }
