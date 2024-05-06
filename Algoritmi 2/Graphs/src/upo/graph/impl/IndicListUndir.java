@@ -55,7 +55,8 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         if (!getVertexList().contains(vertex)) throw new NoSuchElementException();
 
         incidList.remove(getVertexList().indexOf(vertex));
-        for (Set<Edge> vertexEdges:incidList) vertexEdges.removeIf(edge -> edge.getTarget() == vertex);
+        for (Set<Edge> vertexEdges:incidList)
+            vertexEdges.removeIf(edge -> edge.getTarget() == vertex);
         getVertexList().remove(vertex);
     }
     
@@ -86,16 +87,16 @@ public class IndicListUndir extends GraphVertexMapping implements Graph {
         if (!getVertexList().contains(edge.getSource()) || !getVertexList().contains(edge.getTarget()))
             throw new IllegalArgumentException();
 
-        boolean vertexFound = false;
+        boolean found = false;
 
         for (Set<Edge> vertexEdges:incidList) {
             if (vertexEdges.contains(edge)) {
                 vertexEdges.remove(edge);
-                vertexFound = true;
+                found = true;
             } else vertexEdges.remove(Edge.getEdgeByVertexes(edge.getTarget(), edge.getSource()));
         }
 
-        if (!vertexFound) throw new NoSuchElementException();
+        if (!found) throw new NoSuchElementException();
     }
     
     @Override
