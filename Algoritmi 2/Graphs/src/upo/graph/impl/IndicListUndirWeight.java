@@ -13,6 +13,15 @@ import static upo.graph.base.VisitForest.VisitType.*;
 import static upo.graph.base.VisitForest.VisitType.DFS_TOT;
 
 /**
+ * Classe contenente l'implementazione dell'interfaccia Graph dedicata alle liste di incidenza.
+ * La lista di incidenza e' rappresentata da una Lista di Set di WeightedEdge, i quali
+ * consistono nel raccogliere la coppia Edge-Weight rispettivamente.
+ * La lista è strutturata nel seguente modo:
+ * <ul>
+ *     <li>Gli indici dei Vertex all'interno della lista edgeList rispecchiano gli indici usati in incidList</li>
+ *     <li>Ogni Set di WeightedEdge rappresenta gli Edge di incidenza sul proprio Vertex</li>
+ * </ul>
+ *
  * @author Alessio Cameroni - 20044488
  */
 public class IndicListUndirWeight extends IndicListUndir implements WeightedGraph {
