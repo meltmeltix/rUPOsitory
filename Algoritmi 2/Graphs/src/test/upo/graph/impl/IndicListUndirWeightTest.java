@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import upo.graph.base.Edge;
 import upo.graph.base.Vertex;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,7 +68,23 @@ class IndicListUndirWeightTest {
 
     @Test
     void setEdgeWeight() {
+        // Successfully add/edit weight to edge
+        assertDoesNotThrow(() -> fun.setEdgeWeight(Edge.getEdgeByVertexes(v1, v2), 2.0));
+        assertDoesNotThrow(() -> fun.setEdgeWeight(Edge.getEdgeByVertexes(v1, v3), 3.0));
 
+        // Edge's vertices aren't in the graph
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> fun.getEdgeWeight(Edge.getEdgeByVertexes(Vertex.getVertexByLabel("98"), v2))
+        );
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> fun.getEdgeWeight(Edge.getEdgeByVertexes(Vertex.getVertexByLabel("98"), Vertex.getVertexByLabel("99")))
+        );
+
+        // Edge isn't in the list
+        assertThrows(NoSuchElementException.class, () -> fun.setEdgeWeight(Edge.getEdgeByVertexes(v4, v5), 1.0));
+        assertThrows(NoSuchElementException.class, () -> fun.setEdgeWeight(Edge.getEdgeByVertexes(v3, v5), 2.0));
     }
 
     @Test
@@ -236,10 +249,37 @@ class IndicListUndirWeightTest {
 
     @Test
     void getAdjacent() {
+        Set<Vertex> first = new HashSet<>(Arrays.asList(v2, v3));
+        Set<Vertex> second = new HashSet<>(Arrays.asList(v1, v5));
+
+        // Adjacent vertex exists
+        assertEquals(first, fun.getAdjacent(v1));
+        assertEquals(second, fun.getAdjacent(v2));
+
+        // Vertex isn't in the list
+        assertThrows(NoSuchElementException.class, () -> fun.getAdjacent(Vertex.getVertexByLabel("98")));
+        assertThrows(NoSuchElementException.class, () -> fun.getAdjacent(Vertex.getVertexByLabel("99")));
     }
 
     @Test
     void isAdjacent() {
+        // Vertices are adjacent
+        assertTrue(fun.isAdjacent(v2, v1));
+        assertTrue(fun.isAdjacent(v3, v1));
+
+        // Vertices are not adjacent
+        assertFalse(fun.isAdjacent(v5, v1));
+        assertFalse(fun.isAdjacent(v4, v1));
+
+        // Target or source vertex are not in the list
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> fun.isAdjacent(v1, Vertex.getVertexByLabel("97"))
+        );
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> fun.isAdjacent(Vertex.getVertexByLabel("98"), Vertex.getVertexByLabel("99"))
+        );
     }
 
     @Test
@@ -248,25 +288,29 @@ class IndicListUndirWeightTest {
     @Test
     void isDirected() { assertFalse(fun.isDirected()); }
 
+    // TODO
     @Test
     void isCyclic() {
+
     }
 
     @Test
     void isDAG() { assertFalse(fun.isDAG()); }
 
     @Test
-    void getBFSTree() {
-    }
+    void getBFSTree() { assertThrows(UnsupportedOperationException.class, () -> fun.getBFSTree(v1)); }
 
+    // TODO
     @Test
     void getDFSTree() {
     }
 
+    // TODO
     @Test
     void getDFSTOTForest() {
     }
 
+    // TODO
     @Test
     void getDFSTOTForestOrdered() {
     }
@@ -277,7 +321,16 @@ class IndicListUndirWeightTest {
     @Test
     void stronglyConnectedComponents() { assertThrows(UnsupportedOperationException.class, () -> fun.topologicalSort()); }
 
+    // TODO
     @Test
     void connectedComponents() {
+        Vertex v6 = Vertex.getVertexByLabel("6");
+        fun.addVertex(v6);
+
+        Set<Set<Vertex>> cc = new HashSet<>();
+        cc.add(new HashSet<>(Arrays.asList(v1, v2, v3, v4, v5)));
+        cc.add(new HashSet<>(Collections.singletonList(v6)));
+
+        assertEquals(cc, fun.connectedComponents());
     }
 }

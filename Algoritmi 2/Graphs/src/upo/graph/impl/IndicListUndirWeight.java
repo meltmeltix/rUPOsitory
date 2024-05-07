@@ -159,11 +159,22 @@ public class IndicListUndirWeight extends IndicListUndir implements WeightedGrap
     
     @Override
     public Set<Vertex> getAdjacent(Vertex vertex) throws NoSuchElementException {
-        return Set.of();
+        if (!getVertexList().contains(vertex)) throw new NoSuchElementException();
+
+        Set<Vertex> adjacentVertices = new HashSet<>();
+        for (WeightedEdge<Edge, Double> vertexEdge:incidList.get(getVertexList().indexOf(vertex)))
+            adjacentVertices.add(vertexEdge.getEdge().getTarget());
+        return adjacentVertices;
     }
     
     @Override
     public boolean isAdjacent(Vertex targetVertex, Vertex sourceVertex) throws IllegalArgumentException {
+        if (!getVertexList().contains(sourceVertex) || !getVertexList().contains(targetVertex))
+            throw new IllegalArgumentException();
+
+        for (WeightedEdge<Edge, Double> vertexEdges:incidList.get(getVertexList().indexOf(sourceVertex)))
+            if (vertexEdges.getEdge().getSource() == sourceVertex && vertexEdges.getEdge().getTarget() == targetVertex)
+                return true;
         return false;
     }
     
@@ -171,27 +182,31 @@ public class IndicListUndirWeight extends IndicListUndir implements WeightedGrap
     public boolean isCyclic() {
         return false;
     }
-    
+
     @Override
     public VisitForest getBFSTree(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
-        return null;
+        throw new UnsupportedOperationException();
     }
-    
+
+    // TODO
     @Override
     public VisitForest getDFSTree(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
         return null;
     }
-    
+
+    // TODO
     @Override
     public VisitForest getDFSTOTForest(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
         return null;
     }
-    
+
+    // TODO
     @Override
     public VisitForest getDFSTOTForest(Vertex[] vertexOrdering) throws UnsupportedOperationException, IllegalArgumentException {
         return null;
     }
-    
+
+    // TODO
     @Override
     public Set<Set<Vertex>> connectedComponents() throws UnsupportedOperationException {
         return Set.of();
