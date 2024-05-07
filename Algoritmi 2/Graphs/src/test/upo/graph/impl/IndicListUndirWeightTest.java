@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import upo.graph.base.Edge;
 import upo.graph.base.Vertex;
+import upo.graph.base.VisitForest;
 
 import java.util.*;
 
@@ -287,11 +288,15 @@ class IndicListUndirWeightTest {
 
     @Test
     void isDirected() { assertFalse(fun.isDirected()); }
-
-    // TODO
+    
     @Test
     void isCyclic() {
-
+        // Graph is not cyclic
+        assertFalse(fun.isCyclic());
+        
+        // Graph is cyclic
+        fun.addEdge(Edge.getEdgeByVertexes(v4, v5));
+        assertTrue(fun.isCyclic());
     }
 
     @Test
@@ -299,20 +304,66 @@ class IndicListUndirWeightTest {
 
     @Test
     void getBFSTree() { assertThrows(UnsupportedOperationException.class, () -> fun.getBFSTree(v1)); }
-
-    // TODO
+    
     @Test
     void getDFSTree() {
+        // Correct vertices parents
+        List<Vertex> parents = Arrays.asList(null, v1, v1, v3, v2);
+        VisitForest visit = fun.getDFSTree(v1);
+        
+        for (int i = 0; i < fun.getVertexList().size(); i++) {
+            assertEquals(
+                    parents.get(i),
+                    visit.getPartent(fun.getVertexList().get(i))
+            );
+        }
+        
+        // startingVertex is not in the list
+        assertThrows(IllegalArgumentException.class, () -> fun.getDFSTree(Vertex.getVertexByLabel("98")));
+        assertThrows(IllegalArgumentException.class, () -> fun.getDFSTree(Vertex.getVertexByLabel("99")));
     }
-
-    // TODO
+    
     @Test
     void getDFSTOTForest() {
+        // Correct visit times
+        List<Integer> times = Arrays.asList(9, 4, 8, 7, 3);
+        VisitForest visit = fun.getDFSTOTForest(v1);
+        
+        for (int i = 0; i < fun.getVertexList().size(); i++) {
+            assertEquals(
+                    times.get(i),
+                    visit.getEndTime(fun.getVertexList().get(i))
+            );
+        }
+        
+        // startingVertex is not in the list
+        assertThrows(IllegalArgumentException.class, () -> fun.getDFSTOTForest(Vertex.getVertexByLabel("98")));
+        assertThrows(IllegalArgumentException.class, () -> fun.getDFSTOTForest(Vertex.getVertexByLabel("99")));
     }
-
-    // TODO
+    
     @Test
     void getDFSTOTForestOrdered() {
+        // Correct visit times
+        Vertex[] order = new Vertex[5];
+        order[0] = v2;
+        order[1] = v1;
+        order[2] = v4;
+        order[3] = v3;
+        order[4] = v5;
+        
+        List<Integer> times = Arrays.asList(6, 9, 5, 4, 8);
+        VisitForest visit = fun.getDFSTOTForest(order);
+        
+        for (int i = 0; i < fun.getVertexList().size(); i++) {
+            assertEquals(
+                    times.get(i),
+                    visit.getEndTime(fun.getVertexList().get(i))
+            );
+        }
+        
+        // startingVertex is not in the list
+        assertThrows(IllegalArgumentException.class, () -> fun.getDFSTOTForest(Vertex.getVertexByLabel("98")));
+        assertThrows(IllegalArgumentException.class, () -> fun.getDFSTOTForest(Vertex.getVertexByLabel("99")));
     }
 
     @Test

@@ -8,6 +8,10 @@ import util.WeightedEdge;
 
 import java.util.*;
 
+import static upo.graph.base.VisitForest.Color.*;
+import static upo.graph.base.VisitForest.VisitType.*;
+import static upo.graph.base.VisitForest.VisitType.DFS_TOT;
+
 /**
  * @author Alessio Cameroni - 20044488
  */
@@ -180,6 +184,33 @@ public class IndicListUndirWeight extends IndicListUndir implements WeightedGrap
     
     @Override
     public boolean isCyclic() {
+        VisitForest cyc = new VisitForest(this, OTHER);
+        
+        for (Vertex u:getVertexList())
+            if (cyc.getColor(u) == WHITE && visitTreeCycle(cyc, u))
+                return true;
+        return false;
+    }
+    
+    /**
+     * Metodo ricorsivo che si occupa di controllare
+     * che il grafo sia ciclico.
+     *
+     * @param cyc       L'albero di visita che rappresenta la (A)ciclita
+     * @param u         Nodo iniziale di ogni ricorsione
+     * @return          Booleano in base alla condizione
+     */
+    private boolean visitTreeCycle(VisitForest cyc, Vertex u) {
+        cyc.setColor(u, GRAY);
+        
+        for (Vertex v:getAdjacent(u)) {
+            if (cyc.getColor(v) == WHITE) {
+                cyc.setParent(v, u);
+                if (visitTreeCycle(cyc, v)) return true;
+            } else if (!v.equals(cyc.getPartent(u))) return true;
+        }
+        
+        cyc.setColor(u, BLACK);
         return false;
     }
 
@@ -187,28 +218,107 @@ public class IndicListUndirWeight extends IndicListUndir implements WeightedGrap
     public VisitForest getBFSTree(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
         throw new UnsupportedOperationException();
     }
-
-    // TODO
+    
     @Override
     public VisitForest getDFSTree(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
-        return null;
+        if (!getVertexList().contains(startingVertex)) throw new IllegalArgumentException();
+        
+        Stack<Vertex> D = new Stack<>();
+        VisitForest dfs = new VisitForest(this, DFS);
+        
+        dfs.setColor(startingVertex, GRAY);
+        D.push(startingVertex);
+        
+        while (!D.isEmpty()) {
+            Vertex u = D.peek();
+            boolean hasWhiteAdjacent = false;
+            
+            for (Vertex v:getAdjacent(u)) {
+                if (dfs.getColor(v) == WHITE) {
+                    dfs.setColor(v, GRAY);
+                    dfs.setParent(v, u);
+                    D.push(v);
+                    hasWhiteAdjacent = true;
+                    break;
+                }
+            }
+            
+            if (!hasWhiteAdjacent) {
+                dfs.setColor(u, BLACK);
+                D.pop();
+            }
+        }
+        
+        return dfs;
     }
-
-    // TODO
+    
     @Override
     public VisitForest getDFSTOTForest(Vertex startingVertex) throws UnsupportedOperationException, IllegalArgumentException {
-        return null;
+        if (!getVertexList().contains(startingVertex)) throw new IllegalArgumentException();
+        VisitForest dfs = new VisitForest(this, DFS_TOT);
+        return visitDFSTOTForest(dfs, startingVertex);
     }
-
-    // TODO
+    
     @Override
     public VisitForest getDFSTOTForest(Vertex[] vertexOrdering) throws UnsupportedOperationException, IllegalArgumentException {
-        return null;
+        if (vertexOrdering == null) throw new IllegalArgumentException();
+        for (Vertex v:vertexOrdering)
+            if (!getVertexList().contains(v)) throw new IllegalArgumentException();
+        
+        VisitForest dfs = new VisitForest(this, DFS_TOT);
+        
+        for (Vertex u:vertexOrdering) {
+            if (!getVertexList().contains(u)) throw new IllegalArgumentException();
+            if (dfs.getColor(u) == WHITE) dfs = visitDFSTOTForest(dfs, u);
+        }
+        
+        return dfs;
     }
-
-    // TODO
+    
+    /**
+     * Metodo che implementa la visita DFS totale
+     * in modo ricorsivo.
+     *
+     * @param dfs       L'albero di visita
+     * @param u         Nodo iniziale di ogni ricorsione
+     * @return          Lo stato dell'albero della ricorsione
+     */
+    private VisitForest visitDFSTOTForest(VisitForest dfs, Vertex u) {
+        dfs.setColor(u, GRAY);
+        dfs.setStartTime(u, time);
+        time += 1;
+        
+        for (Vertex v:getAdjacent(u)) {
+            if (dfs.getColor(v) == WHITE) {
+                dfs.setParent(v, u);
+                dfs = visitDFSTOTForest(dfs, v);
+            }
+        }
+        
+        dfs.setColor(u, BLACK);
+        dfs.setEndTime(u, time);
+        time += 1;
+        
+        return dfs;
+    }
+    
     @Override
     public Set<Set<Vertex>> connectedComponents() throws UnsupportedOperationException {
-        return Set.of();
+        Set<Set<Vertex>> cc = new HashSet<>();
+        VisitForest dfs = new VisitForest(this, DFS);
+        
+        for (Vertex u:getVertexList()) {
+            if (dfs.getColor(u) == WHITE) {
+                dfs = getDFSTree(u);
+                Set<Vertex> component = new HashSet<>();
+                
+                for (Vertex v:getVertexList())
+                    if (dfs.getColor(v) == BLACK) component.add(v);
+                
+                cc.add(component);
+            }
+        }
+        
+        return cc;
     }
 }
