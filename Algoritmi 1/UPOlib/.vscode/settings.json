@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "stack.h": "c",
+        "error.h": "c",
+        "assert.h": "c"
+    }
+}
