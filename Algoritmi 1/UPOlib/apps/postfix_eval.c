@@ -37,20 +37,6 @@
 
 #define MAX_LINE_LEN 256
 
-/*TO STUDENTS: Complete the body of eval_postfix:
-    1. The type of operands and operations result is long int
-    2. Parameter expr is a string containing the postfix expression
-    3. Valid (binary) operators: +; -; *; =; %; ^
-    4. Numbers and operators are separated by spaces
-    5. Only nonnegative integer numbers: 0, 19, . . .
- 
-    Hint:   use isdigit() to check if a character is a digit, and
-            sscanf() to read numbers from a string as long int (format "%ld")
- 
-    6. Parameter res is the result of the evaluation of the postfix expression
-    7. Returns 1 if expr is well-formed, 0 otherwise
-*/
-
 long exec_op(long num1, long num2, char op) {
     switch (op) {
         case '+': return num1 + num2;
@@ -63,6 +49,9 @@ long exec_op(long num1, long num2, char op) {
     }
 }
 
+/**
+ * Note (IT): https://gist.github.com/meltmeltix/e869c8f98416203fdd4f5cf5f22980f9
+ */
 int eval_postfix(const char *expr, long *res) {
     upo_stack_t stack = upo_stack_create();
     const char operators[] = "+-*=%^";
