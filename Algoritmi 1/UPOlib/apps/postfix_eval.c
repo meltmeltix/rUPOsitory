@@ -49,9 +49,8 @@ long exec_op(long num1, long num2, char op) {
     }
 }
 
-/**
- * Note (IT): https://gist.github.com/meltmeltix/e869c8f98416203fdd4f5cf5f22980f9
- */
+
+// Note (IT): https://gist.github.com/meltmeltix/e869c8f98416203fdd4f5cf5f22980f9
 int eval_postfix(const char *expr, long *res) {
     upo_stack_t stack = upo_stack_create();
     const char operators[] = "+-*=%^";

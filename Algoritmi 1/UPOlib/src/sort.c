@@ -35,9 +35,30 @@
 #include "sort_private.h"
 
 void upo_insertion_sort(void *base, size_t n, size_t size, upo_sort_comparator_t cmp) {
-    // TODO
+    assert(base != NULL);
+
+    size_t i;
+    unsigned char *ptr = base;
+    unsigned char *aux = malloc(size);
+
+    assert(aux != NULL);
+
+    for (i = 1; i < n; ++i) {
+        size_t j = i;
+        memcpy(aux, ptr + i * size, size);
+
+        while (j > 0 && cmp(aux, ptr + (j - 1) * size) < 0) {
+            memcpy(ptr + j * size, ptr + (j - 1) * size, size);
+            --j;
+        }
+
+        memcpy(ptr + j * size, aux, size);
+    }
+
+    free(aux);
 }
 
+// Note (IT): https://gist.github.com/meltmeltix/82dbaf9d461bc1e69c97d3a88667812b
 void upo_merge_sort(void *base, size_t n, size_t size, upo_sort_comparator_t cmp) {
     assert(base != NULL);
     upo_merge_sort_rec(base, 0, n - 1, size, cmp);
@@ -45,10 +66,10 @@ void upo_merge_sort(void *base, size_t n, size_t size, upo_sort_comparator_t cmp
 
 void upo_merge_sort_rec(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp) {
     size_t mid;
-    
+
     if (lo >= hi) return;
 
-    mid = lo+(hi-lo)/2;
+    mid = lo + (hi - lo) / 2;
     upo_merge_sort_rec(base, lo, mid, size, cmp);
     upo_merge_sort_rec(base, mid + 1, hi, size, cmp);
     upo_merge(base, lo, mid, hi, size, cmp);
@@ -58,30 +79,30 @@ void upo_merge(void *base, size_t lo, size_t mid, size_t hi, size_t size, upo_so
     unsigned char *ptr = base;
     unsigned char *aux = NULL;
 
-    size_t n = hi-lo+1;
+    size_t n = hi - lo + 1;
     size_t i = 0;
-    size_t j = mid+1-lo;
+    size_t j = mid + 1 - lo;
     size_t k;
 
-    aux = malloc(n*size);
+    aux = malloc(n * size);
     if (aux == NULL) {
         perror("Unable to allocate memory for auxiliary vector");
         abort();
     }
-    memcpy(aux, ptr+lo*size, n*size);
+    memcpy(aux, ptr + lo * size, n * size);
 
     for (k = lo; k <= hi; ++k) {
-        if (i > (mid-lo)) {
-            memcpy(ptr+k*size, aux+j*size, size);
+        if (i > (mid - lo)) {
+            memcpy(ptr + k * size, aux + j * size, size);
             ++j;
-        } else if (j > (hi-lo)) {
-            memcpy(ptr+k*size, aux+i*size, size);
+        } else if (j > (hi - lo)) {
+            memcpy(ptr + k * size, aux + i * size, size);
             ++i;
-        } else if (cmp(aux+j*size, aux+i*size) < 0) {
-            memcpy(ptr+k*size, aux+j*size, size);
+        } else if (cmp(aux + j * size, aux + i * size) < 0) {
+            memcpy(ptr + k * size, aux + j * size, size);
             ++j;
         } else {
-            memcpy(ptr+k*size, aux+i*size, size);
+            memcpy(ptr + k * size, aux + i * size, size);
             ++i;
         }
     }

@@ -128,10 +128,10 @@ void test_merge_sort() { test_sort_algorithm(upo_merge_sort); }
 void test_quick_sort() { test_sort_algorithm(upo_quick_sort); }
 
 int main() {
-    /* printf("Test case 'insertion sort'... ");
+    printf("Test case 'insertion sort'... ");
     fflush(stdout);
     test_insertion_sort();
-    printf("OK\n"); */
+    printf("OK\n");
 
     printf("Test case 'merge sort'... ");
     fflush(stdout);
