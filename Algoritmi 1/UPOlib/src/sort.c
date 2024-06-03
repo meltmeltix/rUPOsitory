@@ -72,10 +72,10 @@ void upo_merge_sort_rec(void *base, size_t lo, size_t hi, size_t size, upo_sort_
     mid = lo + (hi - lo) / 2;
     upo_merge_sort_rec(base, lo, mid, size, cmp);
     upo_merge_sort_rec(base, mid + 1, hi, size, cmp);
-    upo_merge(base, lo, mid, hi, size, cmp);
+    upo_merge_sort_merge(base, lo, mid, hi, size, cmp);
 }
 
-void upo_merge(void *base, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp) {
+void upo_merge_sort_merge(void *base, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp) {
     unsigned char *ptr = base;
     unsigned char *aux = NULL;
 
@@ -111,5 +111,44 @@ void upo_merge(void *base, size_t lo, size_t mid, size_t hi, size_t size, upo_so
 }
 
 void upo_quick_sort(void *base, size_t n, size_t size, upo_sort_comparator_t cmp) {
-    // TODO
+    assert(base != NULL);
+    upo_quick_sort_rec(base, 0, n - 1, size, cmp);
+}
+
+void upo_quick_sort_rec(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp) {
+    if (lo >= hi) return;
+
+    size_t j = upo_quick_sort_partition(base, lo, hi, size, cmp);
+    if (j > 0) { upo_quick_sort_rec(base, lo, j - 1, size, cmp); }
+
+    upo_quick_sort_rec(base, j + 1, hi, size, cmp);
+}
+
+static size_t upo_quick_sort_partition(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp) {
+    unsigned char *ptr = base;
+    unsigned char *aux = malloc(size);
+    assert(aux != NULL);
+
+    size_t p = lo;
+    size_t i = lo;
+    size_t j = hi + 1;
+
+    while (1) {
+        do { i++; } while(i <= hi && cmp(ptr + i * size, ptr + p * size) <= 0);
+
+        do { j--; } while(j > lo && cmp(ptr + j * size, ptr + p * size) >= 0);
+
+        if (i >= j) break;
+
+        memcpy(aux, ptr + i * size, size);
+        memcpy(ptr + i * size, ptr + j * size, size);
+        memcpy(ptr + j * size, aux, size);
+    }
+
+    memcpy(aux, ptr + p * size, size);
+    memcpy(ptr + p * size, ptr + j * size, size);
+    memcpy(ptr + j * size, aux, size);
+
+    free(aux);
+    return j;
 }

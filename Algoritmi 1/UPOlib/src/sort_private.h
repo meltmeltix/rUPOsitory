@@ -32,25 +32,11 @@
 
 void upo_merge_sort_rec(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp);
 
-void upo_merge(void *base, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp);
+void upo_merge_sort_merge(void *base, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp);
 
-/* TO STUDENTS:
- *
- *  This file is currently "empty".
- *  Here you can put the prototypes of auxiliary "private" functions that are
- *  internally used by "public" functions.
- *  For instance, you can declare the prototype of the function that performs
- *  the "merge" operation in the merge-sort algorithm:
- *    static void upo_merge_sort_merge(void *base, size_t lo, size_t mid, size_t hi, size_t size, upo_sort_comparator_t cmp);
- *  Also, you can declare the prototype of the function that performs the
- *  the recursion in the merge-sort algorithm:
- *    static void upo_merge_sort_rec(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp);
- *  Further, you can declare the prototype of the function that performs the
- *  "partition" operation in the quick-sort algorithm:
- *    static size_t upo_quick_sort_partition(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp);
- *  And so on.
- *
- */
+void upo_quick_sort_rec(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp);
+
+static size_t upo_quick_sort_partition(void *base, size_t lo, size_t hi, size_t size, upo_sort_comparator_t cmp);
 
 
 #endif /* UPO_SORT_PRIVATE_H */

@@ -138,10 +138,10 @@ int main() {
     test_merge_sort();
     printf("OK\n");
 
-    /* printf("Test case 'quick sort'... ");
+    printf("Test case 'quick sort'... ");
     fflush(stdout);
     test_quick_sort();
-    printf("OK\n"); */
+    printf("OK\n");
 
     return 0;
 }
