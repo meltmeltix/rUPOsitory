@@ -1,6 +1,7 @@
 package upo.algotechniques;
 
-import java.util.Map;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class Greedy {
 	
@@ -42,9 +43,39 @@ public class Greedy {
 	 * @return un vettore contenente gli indici dei job in uno scheduling massimale
 	 */
 	public static Integer[] getMooreMaxJobs(Integer[] duration, Integer[] deadline) {
-		
-		
-		return null;
+		if (duration.length != deadline.length) throw new IllegalArgumentException();
+
+		int n = duration.length;
+		int t = 0;
+		Integer[] jobIndices = sortByDeadline(duration, deadline);
+		List<Integer> sol = new ArrayList<>();
+
+		for (int i = 0; i < n; i++) {
+			sol.add(jobIndices[i]);
+			t += duration[jobIndices[i]];
+
+			if (t > deadline[jobIndices[i]]) {
+				int indexOfLargest = 0;
+
+                for (Integer integer : sol) {
+                    if (duration[integer] > duration[jobIndices[indexOfLargest]])
+                        indexOfLargest = jobIndices[integer];
+                }
+
+				t -= duration[jobIndices[indexOfLargest]];
+				sol.remove(jobIndices[indexOfLargest]);
+			}
+		}
+
+		return sol.toArray(new Integer[0]);
 	}
 
+	private static Integer[] sortByDeadline(Integer[] duration, Integer[] deadline) {
+		int jobs = duration.length;
+
+		Integer[] jobIndices = IntStream.range(0, jobs).boxed().toArray(Integer[]::new);
+		Arrays.sort(jobIndices, Comparator.comparingInt(index -> deadline[index]));
+
+		return jobIndices;
+	}
 }
