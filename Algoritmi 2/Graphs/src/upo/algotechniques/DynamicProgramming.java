@@ -47,7 +47,8 @@ public class DynamicProgramming {
 	 * degli archi) o se c'è discrepanza tra i vertici di graph e vertexWeights.
 	 */
 	public static Collection<Vertex> getMSI(Graph graph, Map<Vertex, Integer> vertexWeights) throws IllegalArgumentException {
-		throw new UnsupportedOperationException("Not yet implemented");
+		// TODO
+		return null;
 	}
 	
 }

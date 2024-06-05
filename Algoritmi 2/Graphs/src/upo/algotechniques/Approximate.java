@@ -18,7 +18,8 @@ public class Approximate {
      * per semplicità, di verificare la disuguaglianza triangolare su tutte le coppie di archi)
      */
     public static List<Vertex> approxTSP(WeightedGraph graph) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not yet implemented");
+        // TODO
+        return null;
     }
 
     /** Calcola un ciclo Hamiltoniano utilizzando l'algoritmo <strong>di ricerca locale</strong> visto a
