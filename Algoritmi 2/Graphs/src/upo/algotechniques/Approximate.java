@@ -1,11 +1,14 @@
 package upo.algotechniques;
 
+import upo.graph.base.Edge;
 import upo.graph.base.Graph;
 import upo.graph.base.Vertex;
 import upo.graph.base.WeightedGraph;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class Approximate {
 
@@ -18,8 +21,10 @@ public class Approximate {
      * per semplicità, di verificare la disuguaglianza triangolare su tutte le coppie di archi)
      */
     public static List<Vertex> approxTSP(WeightedGraph graph) throws IllegalArgumentException {
-        // TODO
-        return null;
+        List<Vertex> C = new ArrayList<>();
+        Set<Edge> edges = graph.getEdges();
+        
+        return C;
     }
 
     /** Calcola un ciclo Hamiltoniano utilizzando l'algoritmo <strong>di ricerca locale</strong> visto a

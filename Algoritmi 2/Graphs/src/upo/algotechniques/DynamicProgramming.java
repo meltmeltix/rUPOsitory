@@ -3,7 +3,9 @@ package upo.algotechniques;
 import upo.graph.base.Graph;
 import upo.graph.base.Vertex;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class DynamicProgramming {
@@ -47,8 +49,11 @@ public class DynamicProgramming {
 	 * degli archi) o se c'è discrepanza tra i vertici di graph e vertexWeights.
 	 */
 	public static Collection<Vertex> getMSI(Graph graph, Map<Vertex, Integer> vertexWeights) throws IllegalArgumentException {
+		List<Vertex> msi = new ArrayList<>();
+		
 		// TODO
-		return null;
+		
+		return msi;
 	}
 	
 }
