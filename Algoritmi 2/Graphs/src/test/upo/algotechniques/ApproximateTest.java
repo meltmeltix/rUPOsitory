@@ -47,7 +47,7 @@ class ApproximateTest {
     
     @Test
     void approxTSP() {
-        List<Vertex> expectedResults = Arrays.asList(v1, v2, v3);
+        List<Vertex> expectedResults = Arrays.asList(v2, v1, v4, v3);
         assertEquals(expectedResults, Approximate.approxTSP(graph));
     }
 }

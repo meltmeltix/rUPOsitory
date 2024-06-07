@@ -5,10 +5,7 @@ import upo.graph.base.Graph;
 import upo.graph.base.Vertex;
 import upo.graph.base.WeightedGraph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Approximate {
 
@@ -23,6 +20,18 @@ public class Approximate {
     public static List<Vertex> approxTSP(WeightedGraph graph) throws IllegalArgumentException {
         List<Vertex> C = new ArrayList<>();
         Set<Edge> edges = graph.getEdges();
+        
+        while (!edges.isEmpty()) {
+            Edge curEdge = edges.iterator().next();
+            C.add(curEdge.getSource());
+            C.add(curEdge.getTarget());
+            edges.remove(curEdge);
+            
+            edges.removeIf(edge ->
+                edge.getSource().equals(curEdge.getTarget()) || edge.getTarget().equals(curEdge.getSource()) ||
+                edge.getSource().equals(curEdge.getSource()) || edge.getTarget().equals(curEdge.getTarget())
+            );
+        }
         
         return C;
     }
