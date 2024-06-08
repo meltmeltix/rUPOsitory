@@ -3,10 +3,10 @@ package upo.algotechniques;
 import upo.graph.base.Graph;
 import upo.graph.base.Vertex;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Integer.numberOfLeadingZeros;
 
 public class DynamicProgramming {
 	
@@ -49,11 +49,50 @@ public class DynamicProgramming {
 	 * degli archi) o se c'è discrepanza tra i vertici di graph e vertexWeights.
 	 */
 	public static Collection<Vertex> getMSI(Graph graph, Map<Vertex, Integer> vertexWeights) throws IllegalArgumentException {
-		List<Vertex> msi = new ArrayList<>();
-		
-		// TODO
-		
-		return msi;
+        int n = vertexWeights.size();
+		List<Set<Vertex>> A = new ArrayList<>(Collections.nCopies(n + 1, null));
+		Set<Vertex> vertices = graph.getVertices();
+		Iterator<Vertex> it = vertices.iterator();
+
+		A.set(0, new HashSet<>());
+
+		if (it.hasNext()) {
+			Set<Vertex> firstSet = new HashSet<>();
+			firstSet.add(it.next());
+			A.set(1, firstSet);
+		}
+
+		for (int i = 2; i <= n; i++)
+            A.set(i, compareMaxWeight(A.get(i - 1), A.get(i - 2), it.next(), vertexWeights));
+
+		return A.get(n);
 	}
-	
+
+	private static Set<Vertex> compareMaxWeight(
+			Set<Vertex> sub1,
+			Set<Vertex> sub2,
+			Vertex vertexToAdd,
+			Map<Vertex, Integer> weights
+	) {
+		Set<Vertex> auxSub2 = new HashSet<>(sub2);
+		auxSub2.add(vertexToAdd);
+
+		int w1 = calculateSetWeight(sub1, weights);
+		int w2 = calculateSetWeight(auxSub2, weights);
+
+		if (w1 >= w2) return sub1;
+		else return auxSub2;
+	}
+
+	private static int calculateSetWeight(Set<Vertex> set, Map<Vertex, Integer> weights) {
+		if (set.isEmpty()) return 0;
+
+		int result = MIN_VALUE;
+		for (Vertex v:set) {
+			int curWeight = weights.get(v);
+			if (curWeight > result) result = curWeight;
+		}
+
+		return result;
+	}
 }

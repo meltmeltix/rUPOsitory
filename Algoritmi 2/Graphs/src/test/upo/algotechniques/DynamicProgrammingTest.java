@@ -6,10 +6,10 @@ import upo.graph.base.Edge;
 import upo.graph.base.Vertex;
 import upo.graph.impl.IndicListUndir;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
 
 class DynamicProgrammingTest {
-    IndicListUndir fun;
+    IndicListUndir graph;
     Vertex v1;
     Vertex v2;
     Vertex v3;
@@ -18,27 +18,35 @@ class DynamicProgrammingTest {
     
     @BeforeEach
     void init() {
-        fun = new IndicListUndir();
+        graph = new IndicListUndir();
         v1 = Vertex.getVertexByLabel("1");
         v2 = Vertex.getVertexByLabel("2");
         v3 = Vertex.getVertexByLabel("3");
         v4 = Vertex.getVertexByLabel("4");
         v5 = Vertex.getVertexByLabel("5");
         
-        fun.addVertex(v1);
-        fun.addVertex(v2);
-        fun.addVertex(v3);
-        fun.addVertex(v4);
-        fun.addVertex(v5);
+        graph.addVertex(v1);
+        graph.addVertex(v2);
+        graph.addVertex(v3);
+        graph.addVertex(v4);
+        graph.addVertex(v5);
         
-        fun.addEdge(Edge.getEdgeByVertexes(v1, v2));
-        fun.addEdge(Edge.getEdgeByVertexes(v1, v3));
-        fun.addEdge(Edge.getEdgeByVertexes(v3, v4));
-        fun.addEdge(Edge.getEdgeByVertexes(v2, v5));
+        graph.addEdge(Edge.getEdgeByVertexes(v1, v2));
+        graph.addEdge(Edge.getEdgeByVertexes(v1, v3));
+        graph.addEdge(Edge.getEdgeByVertexes(v3, v4));
+        graph.addEdge(Edge.getEdgeByVertexes(v2, v5));
     }
     
     @Test
     void getMSI() {
-    
+        Map<Vertex, Integer> vertexWeights = new HashMap<>() {{
+            put(v1, 2);
+            put(v2, 7);
+            put(v3, 3);
+            put(v4, 4);
+            put(v5, 9);
+        }};
+
+        Collection<Vertex> result = DynamicProgramming.getMSI(graph, vertexWeights);
     }
 }
