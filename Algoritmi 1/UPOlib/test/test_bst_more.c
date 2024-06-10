@@ -530,7 +530,7 @@ void test_floor_ceiling()
     upo_bst_destroy(bst, 0);
 }
 
-void test_keys_range()
+void  test_keys_range()
 {
     int keys[] = {8,6,4,2,0,10,12,14,16,18};
     int values[] = {0,1,2,3,4,5,6,7,8,9};
