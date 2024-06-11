@@ -5,9 +5,6 @@ import upo.graph.base.Vertex;
 
 import java.util.*;
 
-import static java.lang.Integer.MIN_VALUE;
-import static java.lang.Integer.numberOfLeadingZeros;
-
 public class DynamicProgramming {
 	
 	/** Calcola la LCS tra <code>s1</code> e <code>s2</code> utilizzando l'algoritmo visto a lezione.
@@ -62,8 +59,17 @@ public class DynamicProgramming {
 			A.set(1, firstSet);
 		}
 
-		for (int i = 2; i <= n; i++)
-            A.set(i, compareMaxWeight(A.get(i - 1), A.get(i - 2), it.next(), vertexWeights));
+		for (int i = 2; i <= n; i++) {
+			A.set(
+				i,
+				compareMaxWeight(
+					A.get(i - 1),
+					A.get(i -2),
+					it.next(),
+					vertexWeights
+				)
+			);
+		}
 
 		return A.get(n);
 	}
@@ -87,12 +93,10 @@ public class DynamicProgramming {
 	private static int calculateSetWeight(Set<Vertex> set, Map<Vertex, Integer> weights) {
 		if (set.isEmpty()) return 0;
 
-		int result = MIN_VALUE;
-		for (Vertex v:set) {
-			int curWeight = weights.get(v);
-			if (curWeight > result) result = curWeight;
-		}
+		int totalWeight = 0;
+		for (Vertex v:set)
+			totalWeight += weights.get(v);
 
-		return result;
+		return totalWeight;
 	}
 }

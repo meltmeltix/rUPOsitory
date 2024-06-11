@@ -8,6 +8,8 @@ import upo.graph.impl.IndicListUndir;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class DynamicProgrammingTest {
     IndicListUndir graph;
     Vertex v1;
@@ -47,6 +49,7 @@ class DynamicProgrammingTest {
             put(v5, 9);
         }};
 
-        Collection<Vertex> result = DynamicProgramming.getMSI(graph, vertexWeights);
+        Set<Vertex> expectedResult = new HashSet<>(Arrays.asList(v2, v5));
+        assertEquals(expectedResult, DynamicProgramming.getMSI(graph, vertexWeights));
     }
 }
