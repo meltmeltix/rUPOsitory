@@ -520,33 +520,73 @@ void upo_ht_linprob_resize(upo_ht_linprob_t ht, size_t n) {
 /*** EXERCISE #3 - BEGIN of HASH TABLE - EXTRA OPERATIONS ***/
 
 upo_ht_key_list_t upo_ht_sepchain_keys(const upo_ht_sepchain_t ht) {
-    /* TO STUDENTS:
-     *  Remove the following two lines and put here your implementation. */
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_ht_key_list_t list = NULL;
+
+    if (!upo_ht_sepchain_is_empty(ht)) {
+        for (size_t i = 0; i < ht->capacity; i++) {
+            upo_ht_sepchain_list_node_t *node = NULL;
+
+            for (node = ht->slots[i].head; node != NULL; node = node->next) {
+                upo_ht_key_list_node_t *list_node = malloc(sizeof(struct upo_ht_key_list_node_s));
+
+                if (list_node == NULL) {
+                    perror ("Unable to allocate space for list node");
+                    abort();
+                }
+
+                list_node->key = node->key;
+                list_node->next = list;
+                list = list_node;
+            }
+        }
+    }
+
+    return list;
 }
 
-void upo_ht_sepchain_traverse(const upo_ht_sepchain_t ht,
-                              upo_ht_visitor_t visit, void *visit_context) {
-    /* TO STUDENTS:
-     *  Remove the following two lines and put here your implementation. */
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+void upo_ht_sepchain_traverse(const upo_ht_sepchain_t ht, upo_ht_visitor_t visit, void *visit_context) {
+    if (!upo_ht_sepchain_is_empty(ht) && visit != NULL) {
+        for (size_t i = 0; i < ht->capacity; i++) {
+            upo_ht_sepchain_list_node_t *node = ht->slots[i].head;
+
+            while (node != NULL) {
+                visit(node->key, node->value, visit_context);
+                node = node->next;
+            }
+        }
+    }
 }
 
 upo_ht_key_list_t upo_ht_linprob_keys(const upo_ht_linprob_t ht) {
-    /* TO STUDENTS:
-     *  Remove the following two lines and put here your implementation. */
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+    upo_ht_key_list_t list = NULL;
+
+    if (!upo_ht_linprob_is_empty(ht)) {
+        for (size_t i = 0; i < ht->capacity; i++) {
+            if (ht->slots[i].key != NULL && !ht->slots[i].tombstone) {
+                upo_ht_key_list_t new_node = malloc(sizeof(struct upo_ht_key_list_node_s));
+                
+                if (new_node == NULL) {
+                    perror("Unable to allocate memory for a new key list node");
+                    abort();
+                }
+
+                new_node->key = ht->slots[i].key;
+                new_node->next = list;
+                list = new_node;
+            }
+        }
+    }
+
+    return list;
 }
 
-void upo_ht_linprob_traverse(const upo_ht_linprob_t ht, upo_ht_visitor_t visit,
-                             void *visit_context) {
-    /* TO STUDENTS:
-     *  Remove the following two lines and put here your implementation. */
-    fprintf(stderr, "To be implemented!\n");
-    abort();
+void upo_ht_linprob_traverse(const upo_ht_linprob_t ht, upo_ht_visitor_t visit, void *visit_context) {
+    if (!upo_ht_linprob_is_empty(ht) && visit != NULL) {
+        for (size_t i = 0; i < ht->capacity; i++) {
+            if (ht->slots[i].key != NULL)
+                visit (ht->slots[i].key, ht->slots[i].value, visit_context);
+        }
+    }
 }
 
 /*** EXERCISE #3 - END of HASH TABLE - EXTRA OPERATIONS ***/
